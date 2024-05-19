@@ -1,0 +1,33 @@
+version: '3'
+services:
+
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:80'
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    environment:
+      - MONGO_DATABASE=mongo
+      - MONGO_HOST=mongo
+      - MONGO_PORT=5432
+      - MONGO_USER=postgres
+      - MONGO_PASSWORD=password
+
+  mongo:
+  image: mongo
+  restart: always
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: Ahmed_Adel
+    MONGO_INITDB_ROOT_PASSWORD: Ahmed_123456789

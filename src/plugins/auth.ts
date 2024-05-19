@@ -1,16 +1,12 @@
 import { fastifyPlugin } from 'fastify-plugin';
 import fastifyJwt from '@fastify/jwt';
-import roles from '../models/roles.js';
-import * as userService from '../services/user.service.js';
-import { sign } from 'crypto';
-import exp from 'constants';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 const authPlugin = (fastify: FastifyInstance, _: any, done: Function) => {
   fastify.register(fastifyJwt, {
-    secret: 'supersecret',
+    secret: `${process.env.JWT_SECRET}`,
     sign: {
-      expiresIn: '1d',
+      expiresIn: `${process.env.JWT_EXPIRES_IN}`,
     },
   });
 

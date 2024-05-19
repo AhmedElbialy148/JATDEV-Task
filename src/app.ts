@@ -7,6 +7,7 @@ import authPlugin from './plugins/auth.js';
 import { WebSocketServer } from 'ws';
 import swaggerSetup from './utils/swagger.js';
 import websocketEvents from './websockets/websocket-events.js';
+import 'dotenv/config';
 
 // Declarations ///////////////////////////////////////////////
 declare module 'fastify' {
@@ -47,9 +48,7 @@ fastify.setErrorHandler((error, request, reply) => {
 const start = async () => {
   // Database and Server ////////
   try {
-    await mongoose.connect(
-      'mongodb+srv://Ahmed_Adel:Ahmed_123456789@cluster0.trguitc.mongodb.net/JATDEV-test?retryWrites=true&w=majority&appName=Cluster0'
-    );
+    await mongoose.connect(`${process.env.MONGODB_URL}`);
   } catch (err) {
     console.log('Error Connecting to Database', err);
   }
@@ -58,7 +57,7 @@ const start = async () => {
   try {
     await fastify.ready();
     fastify.swagger();
-    fastify.listen({ port: 3000 }).then(() => {
+    fastify.listen({ port: Number(process.env.PORT) || 3000 }).then(() => {
       fastify.log.info(`server listening on ${process.env.PORT || 3000}`);
 
       // Websocket using ws library
